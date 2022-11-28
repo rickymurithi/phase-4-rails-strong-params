@@ -1,5 +1,8 @@
 class BirdsController < ApplicationController
 
+  wrap_parameters format: []
+  #disabling the wrap param feature. (Individual controller.)
+
   # GET /birds
   def index
     birds = Bird.all
@@ -7,11 +10,15 @@ class BirdsController < ApplicationController
   end
 
   # POST /birds
+  #def create
+  #  bird = Bird.create(params.permit(:name, :species))
+  #  render json: bird, status: :created
+  #end
   def create
-    bird = Bird.create(name: params[:name], species: params[:species])
+    bird = Bird.create(bird_params)
     render json: bird, status: :created
   end
-
+  
   # GET /birds/:id
   def show
     bird = Bird.find_by(id: params[:id])
@@ -20,6 +27,13 @@ class BirdsController < ApplicationController
     else
       render json: { error: "Bird not found" }, status: :not_found
     end
+  end
+
+  private
+  #all methods below are private; (for strong param).
+
+  def bird_params
+    param.permit(:name, :species)
   end
 
 end
